@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".ConnectActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addressText"
+        android:layout_marginTop="29dp"
+        android:editable="true"
+        android:enabled="true"
+        android:text="ftps.mineguild.net"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Address"
+        android:id="@+id/textView"
+        android:labelFor="@+id/addressText"
+        android:layout_alignBaseline="@+id/addressText"
+        android:layout_alignBottom="@+id/addressText"
+        android:layout_toLeftOf="@+id/addressText"
+        android:layout_toStartOf="@+id/addressText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:id="@+id/portText"
+        android:inputType="numberSigned"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/addressText"
+        android:layout_centerHorizontal="true"
+        android:numeric="integer"
+        android:text="7785" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Port"
+        android:id="@+id/textView2"
+        android:labelFor="@+id/portText"
+        android:layout_alignBaseline="@+id/portText"
+        android:layout_alignBottom="@+id/portText"
+        android:layout_toLeftOf="@+id/portText"
+        android:layout_toStartOf="@+id/portText" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/portText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:id="@+id/radioGroup"
+        android:checkedButton="1">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SSL"
+            android:id="@+id/sslButton"
+            android:layout_gravity="center_horizontal"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Normal"
+            android:id="@+id/normalButton"
+            android:layout_gravity="center_horizontal"
+            android:checked="true"
+            android:enabled="true" />
+
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/radioGroup"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
