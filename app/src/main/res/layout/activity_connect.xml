@@ -33,11 +33,10 @@
         android:ems="4"
         android:id="@+id/portText"
         android:inputType="numberSigned"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/addressText"
-        android:layout_centerHorizontal="true"
         android:numeric="integer"
-        android:text="7785" />
+        android:text="7785"
+        android:layout_below="@+id/addressText"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,11 +52,12 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/portText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
         android:id="@+id/radioGroup"
-        android:checkedButton="1">
+        android:checkedButton="1"
+        android:layout_below="@+id/nickEdit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="22dp">
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -84,8 +84,31 @@
         android:text="Connect"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="34dp"
         android:layout_below="@+id/radioGroup"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/nickEdit"
+        android:layout_alignEnd="@+id/nickEdit" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:id="@+id/nickEdit"
+        android:inputType="text"
+        android:layout_below="@+id/portText"
+        android:layout_alignLeft="@+id/portText"
+        android:layout_alignStart="@+id/portText"
+        android:text="Nick1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nickname"
+        android:id="@+id/textView4"
+        android:labelFor="@+id/portText"
+        android:layout_alignBaseline="@+id/nickEdit"
+        android:layout_alignBottom="@+id/nickEdit"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button" />
 
 </RelativeLayout>

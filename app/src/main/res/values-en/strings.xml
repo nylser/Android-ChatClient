@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">ChatClient</string>
     <string name="Address"></string>
+    <string name="nickname">Nickname</string>
 </resources>

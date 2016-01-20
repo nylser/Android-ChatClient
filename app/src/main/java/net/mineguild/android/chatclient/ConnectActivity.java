@@ -1,5 +1,7 @@
 package net.mineguild.android.chatclient;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -11,53 +13,91 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.mineguild.android.chatclient.connection.ConnectionResult;
 import net.mineguild.android.chatclient.connection.InitialConnectTask;
+import net.mineguild.android.chatclient.connection.SocketHandler;
 
 import java.io.IOException;
 import java.net.Socket;
 
 public class ConnectActivity extends AppCompatActivity {
 
-    public static Thread connectionThread;
-
     private EditText addressEdit;
     private EditText portEdit;
+    private EditText nickEdit;
 
     private final int UNCONNECTED = 0;
     private final int CONNECTING = 1;
-    private final int CONNECTED  = 2;
-    private int state;
+    private final int CONNECTED = 2;
+    private int state = UNCONNECTED;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
         Button connectButton = (Button) findViewById(R.id.button);
+        updateConnectButton();
         addressEdit = (EditText) findViewById(R.id.addressText);
         portEdit = (EditText) findViewById(R.id.portText);
+        nickEdit = (EditText) findViewById(R.id.nickEdit);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startConnect();
+                startStopConnect();
             }
         });
     }
 
-    private void startConnect(){
-        String address = addressEdit.getText().toString();
-        String port = portEdit.getText().toString();
-        InitialConnectTask initialConnectTask = new InitialConnectTask(this);
+    private void updateConnectButton() {
+        Button connectButton = (Button) findViewById(R.id.button);
+        if (state == CONNECTED) {
+            connectButton.setText("Disconnect");
+        } else {
+            connectButton.setText("Connect");
+        }
     }
 
-    public void finishConnect(ConnectionResult result){
-        if(state == CONNECTING){
-            if(result == ConnectionResult.SUCCESS){
+    private void startStopConnect() {
+        if (state == CONNECTED) {
+            disconnect();
+        } else if (state != CONNECTING) {
+            String address = addressEdit.getText().toString();
+            String port = portEdit.getText().toString();
+            String nick = nickEdit.getText().toString();
+            InitialConnectTask initialConnectTask = new InitialConnectTask(this);
+            AsyncTask task = initialConnectTask.execute(address, port, nick);
+            state = CONNECTING;
+        }
+    }
+
+    private void disconnect() {
+        if (state == CONNECTED) {
+            try {
+                SocketHandler.getSocket().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            state = UNCONNECTED;
+            updateConnectButton();
+        }
+    }
+
+    public void finishConnect(int result) {
+        if (state == CONNECTING) {
+            if (result == 0) {
+                Toast.makeText(ConnectActivity.this, "Connected.", Toast.LENGTH_SHORT).show();
                 Intent chatActivity = new Intent(this, ChatActivity.class);
-                chatActivity.putExtra("Socket", Socket.class);
+                state = CONNECTED;
+                updateConnectButton();
                 startActivity(chatActivity);
+            } else if (result == 1) {
+                new AlertDialog.Builder(this).setMessage("Your name is already in use!");
+                state = UNCONNECTED;
             }
         }
     }
@@ -85,7 +125,7 @@ public class ConnectActivity extends AppCompatActivity {
     }
 
 
-    public boolean onConnectClicked(){
+    public boolean onConnectClicked() {
 
         return true;
     }

@@ -1,5 +1,6 @@
 package net.mineguild.android.chatclient.connection;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -10,40 +11,52 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class InitialConnectTask extends AsyncTask<String, Void, ConnectionResult> {
+public class InitialConnectTask extends AsyncTask<String, Void, Integer> {
 
     private ConnectActivity listener;
+    private Socket socket;
 
-    public InitialConnectTask(ConnectActivity listener){
+    private ProgressDialog connectingDialog;
+
+    public InitialConnectTask(ConnectActivity listener) {
         this.listener = listener;
     }
 
     @Override
-    /**
-     * params (params[0] Address, params[1] port, params[2] Nickname)
-     */
-    protected ConnectionResult doInBackground(String... params) {
+    protected void onPreExecute() {
+        connectingDialog = new ProgressDialog(listener);
+        connectingDialog.setMessage("Connecting...");
+        connectingDialog.show();
+    }
+
+    @Override
+    protected Integer doInBackground(String... params) {
         String address = params[0];
         int port = Integer.parseInt(params[1]);
-        String name = "Nickname";
+        String name = params[2];
+
         try {
-            Socket socket = new Socket(address, port);
+            socket = new Socket(address, port);
+            SocketHandler.setSocket(socket); // Inform SocketHandler of new Socket.
+            name += "\n";
             socket.getOutputStream().write(name.getBytes("UTF-8"));
             socket.getOutputStream().flush();
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            if(reader.readLine().equals("ok")){
-                return ConnectionResult.SUCCESS;
+            if (reader.readLine().equals("ok")) {
+                return 0;
             } else {
-                return ConnectionResult.NAME_USED;
+                socket.close();
+                return 1;
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.e("ChatClient", "Can't open Socket", e);
-            return ConnectionResult.IO_ERROR;
+            return -1;
         }
     }
 
     @Override
-    protected void onPostExecute(ConnectionResult connectionResult) {
+    protected void onPostExecute(Integer connectionResult) {
+        connectingDialog.dismiss();
         listener.finishConnect(connectionResult);
     }
 }
