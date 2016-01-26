@@ -67,7 +67,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        output.write(message+"\n");
+        output.write(message + "\n");
         output.flush();
     }
 
@@ -91,5 +91,26 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        connectionTask.cancel(true);
+        SocketHandler.suspendConnection();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(SocketHandler.isSuspended()){
+            SocketHandler.returnConnection();
+            startConnectionTask();
+            try {
+                output = new PrintWriter(SocketHandler.getSocket().getOutputStream());
+            } catch (IOException e){
+
+            }
+        }
+        super.onResume();
     }
 }

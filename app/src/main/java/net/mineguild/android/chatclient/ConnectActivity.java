@@ -77,11 +77,7 @@ public class ConnectActivity extends AppCompatActivity {
 
     private void disconnect() {
         if (state == CONNECTED) {
-            try {
-                SocketHandler.getSocket().close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SocketHandler.disconnect();
             state = UNCONNECTED;
             updateConnectButton();
         }
@@ -124,10 +120,5 @@ public class ConnectActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public boolean onConnectClicked() {
-
-        return true;
-    }
 }
 
